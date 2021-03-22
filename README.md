@@ -101,6 +101,7 @@ docker run --rm --name myserver --network=myNetwork -p8080:8080 demoserver
 
 ```bash
 curl -vvv http://localhost:8080/api -d "<dummydata/>" -H 'Accept: application/xml, text/plain, */*' -H 'Content-Type: application/xml'
+
 *   Trying 127.0.0.1...
 * TCP_NODELAY set
 * Connected to localhost (127.0.0.1) port 8080 (#0)
@@ -136,6 +137,7 @@ REBA,JOHN,18
 ```bash
 echo "<dummyxml/>" > data.xml
 ab -n 1000 -p data.xml -T "application/xml" http://localhost:8080/api
+
 This is ApacheBench, Version 2.3 <$Revision: 1807734 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
