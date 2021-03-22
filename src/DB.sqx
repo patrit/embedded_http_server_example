@@ -1,0 +1,58 @@
+#include "DB.h"
+
+#include <cstdio>
+#include <cstring>
+#include <iostream>
+#include <string>
+
+using std::cerr;
+using std::endl;
+
+EXEC SQL INCLUDE SQLCA;
+
+EXEC SQL BEGIN DECLARE SECTION;
+
+char server[129];
+char userid[129];
+char passwd[129];
+
+EXEC SQL END DECLARE SECTION;
+
+bool DB::connect(const char *db, const char *authid, const char *psswd) {
+   strncpy(server, db, 128);
+   strncpy(userid, authid, 128);
+   strncpy(passwd, psswd, 128);
+
+   // Connect zur Datenbank aufbauen
+   EXEC SQL CONNECT TO : server USER : userid USING : passwd;
+
+   cerr << "connecting to " << userid << "@" << db << "..." << endl;
+   if (sqlca.sqlcode != 0) {
+      cerr << "Error connecting to " << userid << "@" << db << endl;
+      return false;
+   }
+   return true;
+} // connect
+
+bool DB::disconnect() {
+   EXEC SQL CONNECT RESET;
+   return true;
+}
+
+bool DB::commit() {
+   EXEC SQL COMMIT;
+   if (sqlca.sqlcode != 0) {
+      cerr << "Commit failed code=" << sqlca.sqlcode << endl;
+      return false;
+   }
+   return true;
+}
+
+bool DB::rollback() {
+   EXEC SQL ROLLBACK;
+   if (sqlca.sqlcode != 0) {
+      cerr << "Rollback failed " << sqlca.sqlcode << endl;
+      return false;
+   }
+   return true;
+}

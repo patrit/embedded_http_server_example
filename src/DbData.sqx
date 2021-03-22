@@ -1,0 +1,60 @@
+#include "DbData.h"
+#include "sqlca.h"
+
+#include <string.h>
+#include <string>
+
+extern struct sqlca sqlca;
+
+// clang-format off
+EXEC SQL BEGIN DECLARE SECTION;
+char hos_job[9];
+char hos_firstname[13];
+char hos_lastname[16];
+sqlint32 hos_edlevel;
+short idx_firstname;
+short idx_lastname;
+short idx_edlevel;
+
+EXEC SQL END DECLARE SECTION;
+// clang-format on
+
+int DbData::getData(std::string const& job, std::vector<DataStruct> &values) {
+   strncpy(hos_job, job.c_str(), sizeof(hos_job));
+
+   EXEC SQL DECLARE CURSOREMPLOYEE CURSOR FOR SELECT FIRSTNME, LASTNAME, EDLEVEL
+      FROM EMPLOYEE WHERE job = :hos_job WITH UR FOR FETCH ONLY;
+
+
+   EXEC SQL OPEN CURSOREMPLOYEE;
+
+   if (SQLCODE < 0) {
+      // print error ...
+      return sqlca.sqlcode;
+   }
+
+   int dummyCounter = 0;
+   while (SQLCODE == 0 && dummyCounter++ < 999) {
+        // clang-format off
+        EXEC SQL FETCH CURSOREMPLOYEE INTO
+            :hos_firstname:idx_firstname,
+            :hos_lastname:idx_lastname,
+            :hos_edlevel:idx_edlevel;
+        // clang-format on
+
+        if (sqlca.sqlcode < 0) {
+            // print error ...
+            return sqlca.sqlcode;
+        }
+
+        DataStruct item;
+        item.firstname = idx_firstname >= 0 ? hos_firstname : "";
+        item.lastname = idx_lastname >= 0 ? hos_lastname : "";
+        item.edlevel = idx_edlevel >= 0 ? hos_edlevel : 0;
+        values.push_back(item);
+   }
+
+   EXEC SQL CLOSE CURSOREMPLOYEE;
+
+   return sqlca.sqlcode;
+}

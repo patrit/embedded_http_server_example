@@ -1,0 +1,24 @@
+PROD                      = DB2_SERVER_EDITION
+FILE                      = /opt/ibm/db2
+LIC_AGREEMENT             = ACCEPT
+INSTALL_TYPE              = CUSTOM
+COMP                      = DB2_DATA_SOURCE_SUPPORT
+COMP                      = APPLICATION_DEVELOPMENT_TOOLS
+
+INSTANCE                  = DB2_INST
+DB2_INST.NAME             = dude
+DB2_INST.PASSWORD         = pw42
+DB2_INST.UID              = 501
+DB2_INST.GID              = 501
+DB2_INST.GROUP_NAME       = db2grp1
+DB2_INST.HOME_DIRECTORY   = /home/db2admin
+DB2_INST.SVCENAME         = db2c_db2admin
+DB2_INST.PORT_NUMBER      = 50000
+DB2_INST.FCM_PORT_NUMBER  = 60000
+DB2_INST.MAX_LOGICAL_NODES = 4
+DB2_INST.FENCED_USERNAME  = db2fenc1
+DB2_INST.FENCED_PASSWORD  = db2fenc1
+DB2_INST.FENCED_UID       = 601
+DB2_INST.FENCED_GID       = 601
+DB2_INST.FENCED_GROUP_NAME = db2fenc1
+DB2_INST.FENCED_HOME_DIRECTORY = /home/db2fenc1

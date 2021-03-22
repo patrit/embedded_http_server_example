@@ -1,0 +1,28 @@
+*-----------------------------------------------------
+* Generated response file used by the DB2 Setup wizard
+* generation time: 2/26/16 10:18 AM
+*-----------------------------------------------------
+*  Product Installation 
+LIC_AGREEMENT       = ACCEPT
+PROD       = RUNTIME_CLIENT
+FILE       = /opt/ibm/db2
+INSTALL_TYPE       = CUSTOM
+COMP       = LDAP_EXPLOITATION
+COMP       = JAVA_SUPPORT
+COMP       = BASE_CLIENT
+* ----------------------------------------------
+*  Instance properties           
+* ----------------------------------------------
+INSTANCE       = DB2_INST
+DB2_INST.TYPE       = client
+*  Instance-owning user
+DB2_INST.NAME       = dude
+DB2_INST.PASSWORD   = pw42
+DB2_INST.UID       = 501
+DB2_INST.GROUP_NAME       = db2grp1
+DB2_INST.HOME_DIRECTORY       = /home/db2admin
+DB2_INST.AUTOSTART       = YES
+*-----------------------------------------------
+*  Installed Languages 
+*-----------------------------------------------
+LANG       = EN
