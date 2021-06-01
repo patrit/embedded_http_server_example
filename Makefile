@@ -1,12 +1,15 @@
 appname := server
 
 CXX := clang++
+CC := clang
 CXXFLAGS := -std=c++17 -I/opt/ibm/db2/include
+CCFLAGS := -std=c17 -I/opt/ibm/db2/include
 LDLIBS := -lPocoNet -lPocoUtil -lPocoFoundation -L/opt/ibm/db2/lib64 -ldb2
 
-srcfiles := $(shell find . -name "*.cpp")
+cfiles := $(shell find . -name "*.c")
+cppfiles := $(shell find . -name "*.cpp")
 sqxfiles := $(shell find . -name "*.sqx")
-objects  := $(patsubst %.cpp, %.o, $(srcfiles)) $(patsubst %.sqx, %.o, $(sqxfiles))
+objects  := $(patsubst %.c, %.o, $(cfiles)) $(patsubst %.cpp, %.o, $(cppfiles)) $(patsubst %.sqx, %.o, $(sqxfiles))
 
 all: $(appname)
 
@@ -15,18 +18,22 @@ $(appname): $(objects)
 
 depend: .depend
 
-.depend: $(srcfiles)
+.depend_c: $(cfiles)
 	rm -f ./.depend
-	$(CXX) $(CXXFLAGS) -MM $^>>./.depend;
+	$(CC) $(CCFLAGS) -MM $^>>./.depend_c;
+
+.depend_cpp: $(cppfiles)
+	rm -f ./.depend
+	$(CXX) $(CXXFLAGS) -MM $^>>./.depend_cpp;
 
 clean:
 	rm -f $(objects)
 
 dist-clean: clean
-	rm -f *~ .depend
+	rm -f *~ .depend_c .depend_cpp
 
 format:
-	clang-format -i $(shell find . -name "*.cpp" -o -name "*.h")
+	clang-format -i $(shell find . -name "*.c" -o -name "*.cpp" -o -name "*.h")
 
 _assertdbupdated:
 	@echo "Assert that the DB is up to date e.g. flyway"
@@ -43,4 +50,4 @@ DBRMVER := $(shell git rev-list -n 1 HEAD)
                                        -e "/static const short sqlIsInputHvar/d" $@; fi; \
 	if [ $$RESULT -ne 0 ]; then [ -e $@.log ] && cat $@.log; fi; rm -f $@.log; exit $$RESULT;);
 
-include .depend
+include .depend_c .depend_cpp

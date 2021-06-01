@@ -1,5 +1,6 @@
 #include "Entrypoint.h"
 #include "DB.h"
+#include "MyCFunc.h"
 #include "DbData.h"
 #include <iostream>
 #include <vector>
@@ -22,6 +23,8 @@ bool Entrypoint::init() { return logon(); }
 
 std::string Entrypoint::call(std::string const &req) {
   cout << "Received " << req << endl;
+
+  my_c_func("just started");
 
   if (!DB::rollback()) {
     DB::disconnect();
